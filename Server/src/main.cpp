@@ -11,25 +11,36 @@ int main(int argc, char** argv)
 {
     Logger::info("=== SpaceSim Test Server Starting ===");
 
-    // 1️⃣ Initialize WorldState and load starting sector
+    // 1️ Initialize WorldState and load starting sector
     WorldState world;
     SectorIndex startingSector{0,0,0};
     world.sectorManager.loadSector(startingSector);
     Logger::info("World initialized with starting sector (0,0,0)");
 
-    // 2️⃣ Start Physics Engine
+    // 2️ Start Physics Engine
     PhysicsEngine physics;
     Logger::info("Physics Engine started.");
 
-    // 3️⃣ Start Network Server (configurable port)
+    // 3️ Start Network Server (configurable port)
     int port = 4000;
     if (argc > 1) port = std::stoi(argv[1]);
     NetworkServer net;
+    if (!net.start(port)) return -1;
+
+while (running) {
+    net.acceptClients();
+    world.update(FIXED_DT);
+    physics.step(FIXED_DT);
+    net.sendWorldUpdates();
+    ...
+}
+
+net.shutdown();
     net.world = &world;
     net.start(port);
     Logger::info("Network Server listening on port " + std::to_string(port));
 
-    // 4️⃣ Main Tick Loop
+    // 4️ Main Tick Loop
     Logger::info("Entering main loop...");
     auto prev = std::chrono::high_resolution_clock::now();
     double accumulator = 0.0;
