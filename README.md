@@ -1,4 +1,4 @@
-\# 🚀 SpaceSim Engine \& Server
+\# SpaceSim Engine \& Server
 
 
 
@@ -22,7 +22,7 @@ This repository contains:
 
 
 
-\## ✨ Features (Current / Planned)
+\## Features (Current / Planned)
 
 
 
